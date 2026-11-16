@@ -1,0 +1,8 @@
+{
+  "name": "kanalizaciya-gomel",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Сайт: монтаж канализации в Гомеле и области (Vercel)",
+  "scripts": { "build": "node build.js" },
+  "engines": { "node": "22.x" }
+}
