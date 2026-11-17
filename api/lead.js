@@ -1,4 +1,5 @@
 'use strict';
+const cfg = require('./_config');
 // Функция Vercel: проверяет заявку на сервере и отправляет её владельцу через Telegram-бота. Ничего не хранит.
 const DISTRICTS = ['Гомель', 'Речица', 'Добруш', 'Чечерск', 'Корма', 'Светлогорск', 'Ветка', 'Наровля', 'Петриков',
   'Хойники', 'Ельск', 'Довск', 'Брагин', 'Лельчицы', 'Рогачёв', 'Жлобин', 'Калинковичи', 'Лоев', 'Другой населённый пункт'];
@@ -31,11 +32,11 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
 
-  // Проверка переменных окружения (токен бота и id чата задаются только в Vercel)
-  const TOKEN = (process.env.TELEGRAM_BOT_TOKEN || '').trim();
-  const CHAT = (process.env.TELEGRAM_CHAT_ID || '').trim();
+  // Токен бота и id чата берутся из api/_config.js (запасной вариант: переменные окружения)
+  const TOKEN = String(cfg.TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN || '').trim();
+  const CHAT = String(cfg.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID || '').trim();
   if (!/^\d{6,12}:[A-Za-z0-9_-]{30,}$/.test(TOKEN) || !/^-?\d{5,15}$/.test(CHAT)) {
-    console.error('[env] TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID не заданы или заданы неверно');
+    console.error('[config] Впишите TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в api/_config.js (формат токена или id неверный)');
     return res.status(500).json({ ok: false, error: 'Сервис временно недоступен. Позвоните нам.' });
   }
 
@@ -98,7 +99,8 @@ module.exports = async (req, res) => {
       body: JSON.stringify({ chat_id: CHAT, text, disable_web_page_preview: true }),
     });
     if (!r.ok) {
-      console.error('[telegram] HTTP ' + r.status);
+      let why = ''; try { why = (await r.json()).description || ''; } catch (e2) { /* нет тела */ }
+      console.error('[telegram] HTTP ' + r.status + ' ' + why); // причина от Telegram, токен в лог не попадает
       return res.status(502).json({ ok: false, error: 'Не удалось отправить заявку. Позвоните нам или напишите в Telegram.' });
     }
   } catch (e) {

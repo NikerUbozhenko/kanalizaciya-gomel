@@ -16,11 +16,9 @@
 ## Выложить на Vercel
 1. vercel.com → Add New → Project → выберите репозиторий → Import.
 2. Settings проекта: Framework Preset = Other (остальное берётся из vercel.json).
-3. Environment Variables (Settings → Environment Variables), добавьте три переменные для Production и Preview:
-   - TELEGRAM_BOT_TOKEN: токен бота от @BotFather
-   - TELEGRAM_CHAT_ID: ваш числовой id (узнать у @userinfobot)
-   - SITE_URL и ALLOWED_ORIGINS нужны только когда подключите свой домен.
-   Откройте своего бота и нажмите Start, иначе бот не сможет вам писать. Токен храните только в Vercel, в репозиторий не добавляйте.
+3. Откройте файл `api/_config.js` и впишите TELEGRAM_BOT_TOKEN (от @BotFather) и TELEGRAM_CHAT_ID (ваш числовой id).
+   Репозиторий должен быть PRIVATE. Откройте своего бота и нажмите Start, иначе бот не сможет вам писать.
+   Переменные в панели Vercel не нужны (если заданы, используются как запасной вариант).
 4. Deploy. Адрес будет вида https://название.vercel.app
 
 ## Свой домен
