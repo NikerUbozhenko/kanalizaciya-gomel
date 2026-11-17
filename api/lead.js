@@ -1,5 +1,5 @@
 'use strict';
-// Функция Vercel: проверяет заявку на сервере и возвращает ссылку в Telegram. Ничего не хранит.
+// Функция Vercel: проверяет заявку на сервере и отправляет её владельцу через Telegram-бота. Ничего не хранит.
 const DISTRICTS = ['Гомель', 'Речица', 'Добруш', 'Чечерск', 'Корма', 'Светлогорск', 'Ветка', 'Наровля', 'Петриков',
   'Хойники', 'Ельск', 'Довск', 'Брагин', 'Лельчицы', 'Рогачёв', 'Жлобин', 'Калинковичи', 'Лоев', 'Другой населённый пункт'];
 
@@ -27,15 +27,16 @@ function originAllowed(origin, host) {
   } catch { return false; }
 }
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Content-Type-Options', 'nosniff');
 
-  // Проверка переменных окружения
-  const TG = (process.env.TELEGRAM_USERNAME || '').trim().replace(/^@/, '');
-  if (!/^[A-Za-z0-9_]{5,32}$/.test(TG)) {
-    console.error('[env] TELEGRAM_USERNAME не задан или задан неверно');
-    return res.status(500).json({ ok: false, error: 'Сервис временно недоступен. Напишите нам в Telegram.' });
+  // Проверка переменных окружения (токен бота и id чата задаются только в Vercel)
+  const TOKEN = (process.env.TELEGRAM_BOT_TOKEN || '').trim();
+  const CHAT = (process.env.TELEGRAM_CHAT_ID || '').trim();
+  if (!/^\d{6,12}:[A-Za-z0-9_-]{30,}$/.test(TOKEN) || !/^-?\d{5,15}$/.test(CHAT)) {
+    console.error('[env] TELEGRAM_BOT_TOKEN или TELEGRAM_CHAT_ID не заданы или заданы неверно');
+    return res.status(500).json({ ok: false, error: 'Сервис временно недоступен. Позвоните нам.' });
   }
 
   // CORS: ответ с заголовками только для разрешённых источников
@@ -61,7 +62,7 @@ module.exports = (req, res) => {
 
   const b = req.body;
   if (!b || typeof b !== 'object' || Array.isArray(b)) return res.status(400).json({ ok: false, error: 'Неверный запрос' });
-  if (b.website) return res.status(200).json({ ok: true, tgUrl: `https://t.me/${TG}` }); // honeypot
+  if (b.website) return res.status(200).json({ ok: true }); // honeypot: молча отбрасываем
 
   const errors = {};
   const phone = normalizePhone(b.phone);
@@ -78,14 +79,31 @@ module.exports = (req, res) => {
   if (b.consent !== true) errors.consent = 'Нужно согласие на обработку данных';
   if (Object.keys(errors).length) return res.status(400).json({ ok: false, errors });
 
-  const lines = [
-    'Здравствуйте! Хочу рассчитать монтаж канализации.',
+  const text = [
+    'Новая заявка с сайта',
+    `Телефон: ${phone}`,
+    name && `Имя: ${name}`,
     `Район: ${district}`,
     `Человек в доме: ${people}`,
     `Наружная труба: ${pipeM} м`,
-    name && `Имя: ${name}`,
-    `Телефон: ${phone}`,
     comment && `Комментарий: ${comment}`,
-  ].filter(Boolean);
-  return res.status(200).json({ ok: true, tgUrl: `https://t.me/${TG}?text=${encodeURIComponent(lines.join('\n'))}` });
+  ].filter(Boolean).join('\n');
+
+  // Отправка владельцу через бота (обычный текст, без разметки)
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
+      body: JSON.stringify({ chat_id: CHAT, text, disable_web_page_preview: true }),
+    });
+    if (!r.ok) {
+      console.error('[telegram] HTTP ' + r.status);
+      return res.status(502).json({ ok: false, error: 'Не удалось отправить заявку. Позвоните нам или напишите в Telegram.' });
+    }
+  } catch (e) {
+    console.error('[telegram] ' + (e && e.name));
+    return res.status(502).json({ ok: false, error: 'Не удалось отправить заявку. Позвоните нам или напишите в Telegram.' });
+  } finally { clearTimeout(timer); }
+  return res.status(200).json({ ok: true });
 };

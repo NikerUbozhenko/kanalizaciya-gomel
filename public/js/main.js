@@ -125,7 +125,7 @@
     cl.appendChild(el('a', { href: '/privacy', target: '_blank', rel: 'noopener' }, 'политике конфиденциальности'));
     ck.appendChild(cl); ck.appendChild(el('small', { class: 'err', id: 'err-consent', role: 'alert' }));
     form.appendChild(ck);
-    var send = el('button', { type: 'submit', class: 'btn' }, 'Отправить в Telegram');
+    var send = el('button', { type: 'submit', class: 'btn' }, 'Отправить заявку');
     var again = el('button', { type: 'button', class: 'btn btn-line' }, 'Пройти заново');
     again.addEventListener('click', function () { step = 0; ans = {}; renderStep(); focusTitle(); });
     var row = el('div', { class: 'q-nav' }); row.appendChild(send); row.appendChild(again); form.appendChild(row);
@@ -145,12 +145,21 @@
         body: JSON.stringify({ people: r.pe.people, pipeM: r.pi.m, district: ans.district, name: $('#name').value, phone: $('#phone').value, comment: comment, website: $('#website').value, consent: $('#consent').checked })
       }).then(function (res) { return res.json().then(function (j) { return { ok: res.ok, j: j }; }); })
         .then(function (res) {
-          if (res.ok && res.j.ok && /^https:\/\/t\.me\//.test(res.j.tgUrl)) { status.textContent = 'Готово. Открываем Telegram…'; window.location.href = res.j.tgUrl; }
+          if (res.ok && res.j.ok) { renderDone($('#phone').value); }
           else { showErrors(res.j.errors || {}); status.className = 'status bad'; status.textContent = res.j.error || 'Проверьте поля формы.'; }
         })
-        .catch(function () { status.className = 'status bad'; status.textContent = 'Нет связи с сервером. Напишите нам в Telegram: @zamvec'; })
+        .catch(function () { status.className = 'status bad'; status.textContent = 'Нет связи с сервером. Позвоните нам или напишите в Telegram: @zamvec'; })
         .then(function () { send.disabled = false; });
     });
+  }
+  function renderDone(phone) {
+    clear();
+    box.appendChild(el('h3', { class: 'r-title', tabindex: '-1', 'data-focus': '1' }, 'Заявка отправлена'));
+    box.appendChild(el('p', { class: 'r-price' }, 'Спасибо!'));
+    box.appendChild(el('p', null, 'Мастер свяжется с вами по номеру ' + phone.trim() + ' и уточнит детали.'));
+    var again = el('button', { type: 'button', class: 'btn btn-line' }, 'Рассчитать ещё раз');
+    again.addEventListener('click', function () { step = 0; ans = {}; renderStep(); focusTitle(); });
+    box.appendChild(again); focusTitle();
   }
   function showErrors(errs) {
     ['phone', 'name', 'consent'].forEach(function (f) {
