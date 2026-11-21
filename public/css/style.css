@@ -84,8 +84,13 @@ p{margin:0 0 .9rem;max-width:62ch}
 .r-form{display:grid;gap:.9rem;margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid var(--line)}
 .f{display:grid;gap:.35rem}
 label{font-weight:600;font-size:.95rem}
-input[type=text],input[type=tel],select{width:100%;min-height:48px;padding:.65rem .9rem;border-radius:10px;border:1px solid rgba(0,0,0,.35);background:#fff;color:var(--text);font:inherit}
+input[type=text],input[type=tel],select,textarea{width:100%;min-height:48px;padding:.65rem .9rem;border-radius:10px;border:1px solid rgba(0,0,0,.35);background:#fff;color:var(--text);font:inherit}
 select option{background:#fff;color:var(--text)}
+textarea{resize:vertical;min-height:90px;line-height:1.5}
+.q-title{font-size:1.45rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:1.1rem}
+.q-title:focus{outline:none}
+.c-form{display:grid;gap:.9rem}
+.done{font-weight:700;margin:1rem 0 1.2rem}
 input[aria-invalid=true]{border-color:var(--err)}
 .err{color:var(--err)}
 .check{grid-template-columns:auto 1fr;align-items:start;column-gap:.7rem}
