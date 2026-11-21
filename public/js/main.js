@@ -170,6 +170,25 @@
   }
   renderStep();
 
+  /* ---------- FAQ: открыт один пункт, остальные закрываются ---------- */
+  var items = [].slice.call(document.querySelectorAll('.faq-item'));
+  function setOpen(it, open) { it.classList.toggle('open', open); it.querySelector('.faq-q').setAttribute('aria-expanded', String(open)); }
+  items.forEach(function (it) {
+    it.querySelector('.faq-q').addEventListener('click', function () {
+      var wasOpen = it.classList.contains('open');
+      items.forEach(function (o) { setOpen(o, false); });
+      if (!wasOpen) setOpen(it, true);
+    });
+  });
+  var faqList = $('#faq-list');
+  if (faqList) faqList.addEventListener('keydown', function (e) {
+    var qs = items.map(function (it) { return it.querySelector('.faq-q'); }), i = qs.indexOf(document.activeElement), n = qs.length;
+    if (i < 0) return;
+    var to = e.key === 'ArrowDown' ? (i + 1) % n : e.key === 'ArrowUp' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
+    if (to >= 0) { e.preventDefault(); qs[to].focus(); }
+  });
+  if (items.length) setOpen(items[0], true);
+
   /* ---------- cookie ---------- */
   var cb = $('#cookie');
   function getCookie(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : null; }

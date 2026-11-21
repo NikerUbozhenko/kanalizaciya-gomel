@@ -4,6 +4,6 @@
    Если токен утёк, перевыпустите его в @BotFather (/revoke) и вставьте новый сюда.
    Файл с именем на «_» не открывается как адрес сайта, его нельзя скачать с сервера. */
 module.exports = {
-  TELEGRAM_BOT_TOKEN: '9157215166:AAEMV-zYCwTpx7yqvYygN2QoscYsX-mhV84', // пример: 1234567890:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  TELEGRAM_CHAT_ID: '7508436846'    // ваш числовой id, пример: 123456789
+  TELEGRAM_BOT_TOKEN: '', // пример: 1234567890:AAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  TELEGRAM_CHAT_ID: ''    // ваш числовой id, пример: 123456789
 };
