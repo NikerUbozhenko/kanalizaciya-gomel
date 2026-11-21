@@ -37,4 +37,4 @@ Vercel → Project → Settings → Domains → Add. Пропишите DNS по
 Контур Гомельской области встроен в `views/index.html` как SVG (данные Natural Earth, общественное достояние).
 
 ## Лицензии
-Шрифты Oswald и Onest: SIL OFL 1.1 (public/fonts/OFL-oswald.txt, OFL-onest.txt), использование на сайтах разрешено.
+Шрифты Manrope и Oswald: SIL OFL 1.1 (public/fonts/OFL-Manrope.txt, OFL-oswald.txt), использование на сайтах разрешено.
