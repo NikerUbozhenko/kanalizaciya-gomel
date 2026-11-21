@@ -18,6 +18,16 @@ for (const name of ['index', 'privacy']) {
   const html = fs.readFileSync(path.join(__dirname, 'views', name + '.html'), 'utf8').replace(/\{\{SITE_URL\}\}/g, site);
   fs.writeFileSync(path.join(out, name + '.html'), html);
 }
+// Версия файлов в адресе (?v=…): после каждого деплоя браузер берёт свежие css/js, а не кеш
+const crypto = require('crypto');
+const ver = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.join(out, f))).digest('hex').slice(0, 10);
+const versioned = ['css/style.css', 'css/nojs.css', 'js/prices.js', 'js/main.js'];
+for (const name of ['index', 'privacy']) {
+  const file = path.join(out, name + '.html');
+  let html = fs.readFileSync(file, 'utf8');
+  for (const f of versioned) html = html.split('"/' + f + '"').join('"/' + f + '?v=' + ver(f) + '"');
+  fs.writeFileSync(file, html);
+}
 const day = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${site}/sitemap.xml\n`);
 fs.writeFileSync(path.join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
