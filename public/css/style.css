@@ -128,21 +128,14 @@ input[aria-invalid=true]{border-color:var(--err)}
 .faq-a p{margin:0;padding:0 1.3rem 1.3rem;max-width:none;color:var(--muted);opacity:0;transform:translateY(-8px);transition:opacity .35s,transform .55s var(--ease)}
 .faq-item.open .faq-a p{opacity:1;transform:none;transition-delay:.12s,.05s}
 
-/* Контакты: тёмная полоса */
-.contact-band{background:#17212b;color:var(--soft);border-top:0}
-.contact-band :focus-visible{outline-color:var(--soft)}
+/* Контакты */
 .cb-grid{display:grid;grid-template-columns:7fr 5fr;gap:3.5rem;align-items:center}
-.contact-band h2{font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:600;letter-spacing:-.005em;line-height:1.04;color:var(--soft)}
-.cb-phone{display:inline-block;margin:.2rem 0 1rem;font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:600;font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.05;letter-spacing:-.005em;white-space:nowrap;color:var(--soft);text-decoration:none}
-.cb-phone:hover{color:var(--accent)}
-.cb-text{color:#c3ccd4}
-.contact-band .btn{background:#f0701e;border-color:#f0701e;color:#1c0f05}
-.contact-band .btn:hover{background:#ff8238;border-color:#ff8238}
-.contact-band .btn-dark-line{background:transparent;color:var(--soft);border-color:rgba(246,244,239,.6)}
-.contact-band .btn-dark-line:hover{background:var(--soft);color:#17212b;border-color:var(--soft)}
-.cb-panel{border:1px solid rgba(246,244,239,.22);background:rgba(246,244,239,.07);border-radius:20px;padding:1.6rem 1.8rem;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
-.cb-panel p{color:#d6dde3;margin:0 0 .8rem}
-.cb-panel p:last-child{margin:0}
+.contact-band h2{font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:600;letter-spacing:-.005em;line-height:1.04}
+.cb-phone{display:inline-block;margin:.2rem 0 1rem;font-family:Oswald,"Arial Narrow",Impact,sans-serif;font-weight:600;font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.05;letter-spacing:-.005em;white-space:nowrap;color:var(--text);text-decoration:none}
+.cb-phone:hover{color:var(--link)}
+.cb-text{color:var(--muted)}
+.cb-side p{color:#3a4047;margin:0 0 .8rem}
+.cb-side p:last-child{margin:0}
 
 .foot{padding:2rem 0 5rem;color:var(--muted);font-size:.95rem}
 .foot p{margin:.2rem 0}
