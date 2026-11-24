@@ -186,7 +186,7 @@
     if (r.ac.add) ul.appendChild(el('li', null, 'Сложный подъезд: +' + fmt(r.ac.add) + ' руб.'));
     if (r.wi.add) ul.appendChild(el('li', null, 'Внутренняя разводка: +' + fmt(r.wi.add) + ' руб.'));
     box.appendChild(ul);
-    box.appendChild(el('p', { class: 'muted' }, 'Это ориентир, а не окончательная цена. Точную смету назовёт мастер после бесплатного выезда.'));
+    box.appendChild(el('p', { class: 'muted' }, 'Это ориентир, а не окончательная цена. Точную смету назовёт мастер после выезда специалиста (выезд и смета — 100 руб.).'));
     box.appendChild(el('p', { class: 'done' }, 'Заявка отправлена. Мастер свяжется с вами: ' + form.via + ', ' + form.phone + '.'));
     var again = el('button', { type: 'button', class: 'btn btn-line' }, 'Рассчитать ещё раз');
     again.addEventListener('click', function () { step = 0; ans = {}; form = { name: '', phone: '', district: DISTRICTS[0], via: VIA[0], comment: '', consent: false }; renderStep(); focusTitle(); });
